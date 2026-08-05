@@ -1,0 +1,54 @@
+{
+  "common": {
+    "signOut": "Αποσύνδεση",
+    "goHome": "Αρχική"
+  },
+  "login": {
+    "title": "Σύνδεση",
+    "email": "Email",
+    "password": "Κωδικός",
+    "submit": "Σύνδεση",
+    "failed": "Λάθος email ή κωδικός.",
+    "invalidEmail": "Εισάγετε έγκυρη διεύθυνση email.",
+    "passwordRequired": "Εισάγετε τον κωδικό σας."
+  },
+  "home": {
+    "title": "Τιμολόγια",
+    "signedInAs": "Συνδεδεμένος ως {{email}}. Ο πίνακας τιμολογίων μπαίνει εδώ."
+  },
+  "invoices": {
+    "title": "Τιμολόγια",
+    "done": "Πληρωμένο",
+    "supplierName": "Προμηθευτής",
+    "invoiceNumber": "Αριθμός",
+    "purchaseDate": "Ημ. αγοράς",
+    "amount": "Ποσό",
+    "paymentDays": "Ημέρες",
+    "dueDate": "Ημ. εξόφλησης",
+    "loadFailed": "Η φόρτωση των τιμολογίων απέτυχε."
+  },
+  "newInvoice": {
+    "title": "Νέο τιμολόγιο",
+    "subtitle": "Συμπληρώστε τα στοιχεία του τιμολογίου.",
+    "supplierName": "Προμηθευτής",
+    "invoiceNumber": "Αριθμός τιμολογίου",
+    "purchaseDate": "Ημερομηνία αγοράς",
+    "amount": "Ποσό",
+    "paymentDays": "Ημέρες πληρωμής",
+    "dueDate": "Ημερομηνία εξόφλησης",
+    "dueDateHint": "Η ημερομηνία εξόφλησης υπολογίζεται αυτόματα.",
+    "submit": "Αποθήκευση",
+    "failed": "Η αποθήκευση απέτυχε. Δοκιμάστε ξανά.",
+    "invalidDate": "Εισάγετε έγκυρη ημερομηνία.",
+    "supplierNameRequired": "Εισάγετε τον προμηθευτή.",
+    "invoiceNumberRequired": "Εισάγετε τον αριθμό τιμολογίου.",
+    "amountRequired": "Εισάγετε το ποσό.",
+    "amountPositive": "Το ποσό πρέπει να είναι μεγαλύτερο από 0.",
+    "paymentDaysRequired": "Εισάγετε τις ημέρες πληρωμής.",
+    "paymentDaysInteger": "Οι ημέρες πρέπει να είναι ακέραιος αριθμός.",
+    "paymentDaysPositive": "Οι ημέρες δεν μπορούν να είναι αρνητικές."
+  },
+  "notFound": {
+    "title": "Η σελίδα δεν βρέθηκε"
+  }
+}
