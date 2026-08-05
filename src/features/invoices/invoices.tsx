@@ -1,36 +1,39 @@
-import { Alert, alpha, Checkbox, Stack, Typography, useTheme } from "@mui/material";
+import { Alert, IconButton, Stack, SvgIcon, Tooltip, Typography } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import dayjs from "dayjs";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { ConfirmDialog } from "@/components/confirm-dialog";
 import { formatDate } from "@/utils/dates";
 
 import type { InvoiceRow } from "./useInvoices";
+
+const TrashIcon = () => (
+  <SvgIcon fontSize="small">
+    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+  </SvgIcon>
+);
 
 interface InvoicesProps {
   rows: InvoiceRow[];
   loading: boolean;
   loadFailed: boolean;
-  toggleDone: (id: string, done: boolean) => void;
+  removeInvoice: (id: string) => void;
 }
 
-export const Invoices = ({ rows, loading, loadFailed, toggleDone }: InvoicesProps) => {
-  const theme = useTheme();
+export const Invoices = ({ rows, loading, loadFailed, removeInvoice }: InvoicesProps) => {
   const { t } = useTranslation();
 
+  // The invoice awaiting delete confirmation, or null when the dialog is shut.
+  const [pendingDelete, setPendingDelete] = useState<InvoiceRow | null>(null);
+
+  const confirmDelete = () => {
+    if (pendingDelete) removeInvoice(pendingDelete.id);
+    setPendingDelete(null);
+  };
+
   const columns: GridColDef<InvoiceRow>[] = [
-    {
-      field: "done",
-      headerName: t("invoices.done"),
-      width: 110,
-      sortable: false,
-      renderCell: ({ row }) => (
-        <Checkbox
-          checked={row.done}
-          onChange={(event) => toggleDone(row.id, event.target.checked)}
-        />
-      ),
-    },
     { field: "supplierName", headerName: t("invoices.supplierName"), flex: 1, minWidth: 140 },
     { field: "invoiceNumber", headerName: t("invoices.invoiceNumber"), flex: 1, minWidth: 130 },
     {
@@ -52,6 +55,21 @@ export const Invoices = ({ rows, loading, loadFailed, toggleDone }: InvoicesProp
       headerName: t("invoices.dueDate"),
       width: 130,
       valueFormatter: (value: InvoiceRow["dueDate"]) => formatDate(value),
+    },
+    {
+      field: "actions",
+      headerName: "",
+      width: 70,
+      sortable: false,
+      filterable: false,
+      align: "center",
+      renderCell: ({ row }) => (
+        <Tooltip title={t("invoices.delete")}>
+          <IconButton size="small" color="error" onClick={() => setPendingDelete(row)}>
+            <TrashIcon />
+          </IconButton>
+        </Tooltip>
+      ),
     },
   ];
 
@@ -81,23 +99,20 @@ export const Invoices = ({ rows, loading, loadFailed, toggleDone }: InvoicesProp
         hideFooterSelectedRowCount
         initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
         pageSizeOptions={[10, 25, 50]}
+        localeText={{ noRowsLabel: t("invoices.noRows") }}
         getRowClassName={({ row }) => `invoice-row--${row.status}`}
-        sx={{
-          width: "100%",
-          border: 0,
-          "& .invoice-row--overdue": {
-            bgcolor: alpha(theme.palette.error.main, 0.12),
-            "&:hover": { bgcolor: alpha(theme.palette.error.main, 0.18) },
-          },
-          "& .invoice-row--dueSoon": {
-            bgcolor: alpha(theme.palette.warning.main, 0.15),
-            "&:hover": { bgcolor: alpha(theme.palette.warning.main, 0.22) },
-          },
+        sx={{ width: "100%" }}
+      />
 
-          "& .invoice-row--done": {
-            opacity: 0.55,
-          },
-        }}
+      <ConfirmDialog
+        open={!!pendingDelete}
+        title={t("invoices.deleteTitle")}
+        message={t("invoices.deleteMessage", {
+          invoiceNumber: pendingDelete?.invoiceNumber ?? "",
+        })}
+        confirmLabel={t("invoices.delete")}
+        onConfirm={confirmDelete}
+        onCancel={() => setPendingDelete(null)}
       />
     </Stack>
   );

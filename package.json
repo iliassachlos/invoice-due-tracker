@@ -13,6 +13,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@hookform/resolvers": "^5.7.1",
+    "@mui/icons-material": "^9.3.0",
     "@mui/material": "^9.3.0",
     "@mui/x-data-grid": "^9.10.1",
     "@mui/x-date-pickers": "^9.10.1",

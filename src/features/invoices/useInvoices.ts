@@ -1,4 +1,4 @@
-import { getInvoices, setInvoiceDone } from "@/api/invoice";
+import { deleteInvoice, getInvoices, setInvoiceDone } from "@/api/invoice";
 import type { InvoiceWithId } from "@/types/invoice";
 import { getDueDate, getInvoiceStatus, type InvoiceStatus } from "@/utils/dates";
 import dayjs, { type Dayjs } from "dayjs";
@@ -45,13 +45,25 @@ export const useInvoices = () => {
     }
   };
 
+  const removeInvoice = async (id: string) => {
+    // Drop it from the list straight away, then persist.
+    setInvoices((current) => current.filter((invoice) => invoice.id !== id));
+
+    try {
+      await deleteInvoice(id);
+    } catch {
+      load();
+    }
+  };
+
   const rows: InvoiceRow[] = invoices
     .map((invoice) => {
       const dueDate = getDueDate(dayjs(invoice.purchaseDate), invoice.paymentDays);
 
       return { ...invoice, dueDate, status: getInvoiceStatus(dueDate, invoice.done) };
     })
-    .sort((a, b) => (a.dueDate?.valueOf() ?? Infinity) - (b.dueDate?.valueOf() ?? Infinity));
+    // Oldest purchase date first.
+    .sort((a, b) => a.purchaseDate.localeCompare(b.purchaseDate));
 
-  return { rows, loading, loadFailed, reload: load, toggleDone };
+  return { rows, loading, loadFailed, reload: load, toggleDone, removeInvoice };
 };

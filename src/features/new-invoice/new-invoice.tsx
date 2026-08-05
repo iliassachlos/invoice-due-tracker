@@ -29,7 +29,21 @@ export const NewInvoice = ({ onSaved }: NewInvoiceProps) => {
       }}
     >
       <FormProvider {...methods}>
-        <Stack component="form" onSubmit={handleSubmit(onSubmit)} sx={{ gap: 3 }} noValidate>
+        <Stack
+          component="form"
+          onSubmit={handleSubmit(onSubmit)}
+          // Only the submit button submits. Enter in a text field is
+          // swallowed, but still works on buttons and inside the date picker.
+          onKeyDown={(event) => {
+            const target = event.target as HTMLElement;
+
+            if (event.key === "Enter" && target.tagName === "INPUT") {
+              event.preventDefault();
+            }
+          }}
+          sx={{ gap: 3 }}
+          noValidate
+        >
           <Stack sx={{ gap: 0.5 }}>
             <Typography variant="h6" component="h2" sx={{ fontWeight: 600 }}>
               {t("newInvoice.title")}
