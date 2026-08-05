@@ -9,7 +9,6 @@ import { formatDate } from "@/utils/dates";
 import { useNewInvoice } from "./useNewInvoice";
 
 interface NewInvoiceProps {
-  /** Called after a successful save, so the list can refresh. */
   onSaved?: () => void;
 }
 
