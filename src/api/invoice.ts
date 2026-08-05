@@ -1,6 +1,6 @@
 import { db } from "@/firebase/config";
 import type { Invoice, InvoiceWithId } from "@/types/invoice";
-import { addDoc, collection, doc, getDocs, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
 
 const invoicesCollection = collection(db, "invoices");
 
@@ -19,4 +19,8 @@ export const getInvoices = async (): Promise<InvoiceWithId[]> => {
 
 export const setInvoiceDone = async (id: string, done: boolean) => {
   await updateDoc(doc(db, "invoices", id), { done });
+};
+
+export const deleteInvoice = async (id: string) => {
+  await deleteDoc(doc(db, "invoices", id));
 };

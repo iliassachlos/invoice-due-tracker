@@ -4,7 +4,7 @@ import { NewInvoice } from "@/features/new-invoice/new-invoice";
 import { Stack } from "@mui/material";
 
 const HomePage = () => {
-  const { rows, loading, loadFailed, reload, toggleDone } = useInvoices();
+  const { rows, loading, loadFailed, reload, removeInvoice } = useInvoices();
 
   return (
     <Stack
@@ -13,7 +13,12 @@ const HomePage = () => {
     >
       <NewInvoice onSaved={reload} />
 
-      <Invoices rows={rows} loading={loading} loadFailed={loadFailed} toggleDone={toggleDone} />
+      <Invoices
+        rows={rows}
+        loading={loading}
+        loadFailed={loadFailed}
+        removeInvoice={removeInvoice}
+      />
     </Stack>
   );
 };
