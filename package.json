@@ -12,9 +12,19 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@hookform/resolvers": "^5.7.1",
     "@mui/material": "^9.3.0",
+    "@mui/x-data-grid": "^9.10.1",
+    "@mui/x-date-pickers": "^9.10.1",
+    "dayjs": "^1.11.21",
+    "firebase": "^12.17.1",
+    "i18next": "^26.3.6",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "react-hook-form": "^7.84.0",
+    "react-i18next": "^17.0.11",
+    "react-router-dom": "^7.18.2",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
