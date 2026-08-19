@@ -17,6 +17,10 @@ export const getInvoices = async (): Promise<InvoiceWithId[]> => {
   }));
 };
 
+export const updateInvoice = async (id: string, payload: Invoice) => {
+  await updateDoc(doc(db, "invoices", id), payload);
+};
+
 export const setInvoiceDone = async (id: string, done: boolean) => {
   await updateDoc(doc(db, "invoices", id), { done });
 };

@@ -18,6 +18,7 @@ const HomePage = () => {
         loading={loading}
         loadFailed={loadFailed}
         removeInvoice={removeInvoice}
+        reload={reload}
       />
     </Stack>
   );
