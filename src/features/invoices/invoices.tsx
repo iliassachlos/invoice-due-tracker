@@ -1,32 +1,31 @@
-import { Alert, IconButton, Stack, SvgIcon, Tooltip, Typography } from "@mui/material";
+import { Alert, IconButton, Stack, Tooltip, Typography, useTheme } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ConfirmDialog } from "@/components/confirm-dialog";
+import { EditInvoiceDialog } from "@/features/edit-invoice/edit-invoice-dialog";
 import { formatDate } from "@/utils/dates";
 
 import type { InvoiceRow } from "./useInvoices";
-
-const TrashIcon = () => (
-  <SvgIcon fontSize="small">
-    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
-  </SvgIcon>
-);
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface InvoicesProps {
   rows: InvoiceRow[];
   loading: boolean;
   loadFailed: boolean;
   removeInvoice: (id: string) => void;
+  reload: () => void;
 }
 
-export const Invoices = ({ rows, loading, loadFailed, removeInvoice }: InvoicesProps) => {
-  const { t } = useTranslation();
-
-  // The invoice awaiting delete confirmation, or null when the dialog is shut.
+export const Invoices = ({ rows, loading, loadFailed, removeInvoice, reload }: InvoicesProps) => {
   const [pendingDelete, setPendingDelete] = useState<InvoiceRow | null>(null);
+  const [pendingEdit, setPendingEdit] = useState<InvoiceRow | null>(null);
+
+  const { t } = useTranslation();
+  const theme = useTheme();
 
   const confirmDelete = () => {
     if (pendingDelete) removeInvoice(pendingDelete.id);
@@ -55,20 +54,39 @@ export const Invoices = ({ rows, loading, loadFailed, removeInvoice }: InvoicesP
       headerName: t("invoices.dueDate"),
       width: 130,
       valueFormatter: (value: InvoiceRow["dueDate"]) => formatDate(value),
+      cellClassName: ({ row }) => (row.status === "overdue" ? "invoice-cell--overdue" : ""),
     },
     {
       field: "actions",
       headerName: "",
-      width: 70,
+      width: 110,
       sortable: false,
       filterable: false,
       align: "center",
       renderCell: ({ row }) => (
-        <Tooltip title={t("invoices.delete")}>
-          <IconButton size="small" color="error" onClick={() => setPendingDelete(row)}>
-            <TrashIcon />
-          </IconButton>
-        </Tooltip>
+        <Stack
+          direction="row"
+          sx={{ justifyContent: "center", alignItems: "center", height: "100%", gap: 1 }}
+        >
+          <Tooltip title={t("invoices.edit")}>
+            <IconButton
+              size="small"
+              onClick={() => setPendingEdit(row)}
+              sx={{ "&:hover": { color: theme.palette.primary.main } }}
+            >
+              <EditIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={t("invoices.delete")}>
+            <IconButton
+              size="small"
+              onClick={() => setPendingDelete(row)}
+              sx={{ "&:hover": { color: theme.palette.error.main } }}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Stack>
       ),
     },
   ];
@@ -101,7 +119,21 @@ export const Invoices = ({ rows, loading, loadFailed, removeInvoice }: InvoicesP
         pageSizeOptions={[10, 25, 50]}
         localeText={{ noRowsLabel: t("invoices.noRows") }}
         getRowClassName={({ row }) => `invoice-row--${row.status}`}
-        sx={{ width: "100%" }}
+        sx={{
+          width: "100%",
+          "& .invoice-row--overdue": {
+            bgcolor: theme.palette.error.light,
+          },
+          "& .invoice-row--dueSoon": {
+            bgcolor: theme.palette.warning.light,
+          },
+        }}
+      />
+
+      <EditInvoiceDialog
+        invoice={pendingEdit}
+        onClose={() => setPendingEdit(null)}
+        onSaved={reload}
       />
 
       <ConfirmDialog

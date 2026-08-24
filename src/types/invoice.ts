@@ -7,5 +7,5 @@ export type Invoice = {
   done: boolean;
 };
 
-/** An invoice read back from Firestore, carrying its document id */
+// Invoice with an ID, used for editing existing invoices
 export type InvoiceWithId = Invoice & { id: string };

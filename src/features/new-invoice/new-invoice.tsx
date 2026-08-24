@@ -8,13 +8,14 @@ import { formatDate } from "@/utils/dates";
 
 import { useNewInvoice } from "./useNewInvoice";
 
-interface NewInvoiceProps {
+type NewInvoiceProps = {
   onSaved?: () => void;
-}
+};
 
 export const NewInvoice = ({ onSaved }: NewInvoiceProps) => {
-  const { methods, handleSubmit, onSubmit, isSubmitting, saveFailed, dueDate } =
-    useNewInvoice(onSaved);
+  const { methods, handleSubmit, onSubmit, isSubmitting, saveFailed, dueDate } = useNewInvoice({
+    onSaved,
+  });
   const { t } = useTranslation();
 
   return (
@@ -32,8 +33,6 @@ export const NewInvoice = ({ onSaved }: NewInvoiceProps) => {
         <Stack
           component="form"
           onSubmit={handleSubmit(onSubmit)}
-          // Only the submit button submits. Enter in a text field is
-          // swallowed, but still works on buttons and inside the date picker.
           onKeyDown={(event) => {
             const target = event.target as HTMLElement;
 
